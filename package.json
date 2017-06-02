@@ -1,0 +1,13 @@
+{
+  "name": "serverless-onnikka",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Mikko Matilainen <mikko.matilainen@gofore.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^3.19.0"
+  },
+  "dependencies": {
+    "node-fetch": "^1.7.0"
+  }
+}
