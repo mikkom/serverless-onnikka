@@ -1,39 +1,57 @@
 'use strict';
 
 const fetch = require('node-fetch');
+const moment = require('moment');
 
-const getEssentialInfo = res => res.body.map(({ monitoredVehicleJourney }) => {
-    const {
-      lineRef,
-      vehicleLocation: { longitude, latitude },
-      bearing,
-      delay
-    } = monitoredVehicleJourney;
+const LINES = ['3', '5', '24'];
+const JOURNEY_PATTERN_REFS = ['3A', '3B', '5', '24'];
 
-    return {
-      lineRef,
-      longitude,
-      latitude,
-      bearing,
-      delay
-    }
-  });
+const durationToSeconds = duration => moment.duration(duration).asSeconds();
 
-const fetchData = (callback) => {
-  const createResponse = body => ({
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*', // Required for CORS support to work
-    },
-    body: JSON.stringify(body)
-  });
+const convertVehicleJourney = ({
+  lineRef,
+  journeyPatternRef,
+  vehicleRef,
+  vehicleLocation: { latitude, longitude },
+  bearing,
+  delay,
+  speed
+}) => ({
+  lineRef,
+  journeyPatternRef,
+  vehicleRef,
+  location: {
+    latitude: parseFloat(latitude),
+    longitude: parseFloat(longitude)
+  },
+  bearing: parseFloat(bearing),
+  delay: durationToSeconds(delay),
+  speed
+});
 
-  const url = 'http://data.itsfactory.fi/journeys/api/1/vehicle-activity?lineRef=5';
+const getEssentialInfo = ({ body }) =>
+  body
+    .map(({ monitoredVehicleJourney }) =>
+      convertVehicleJourney(monitoredVehicleJourney)
+    )
+    .filter(({ journeyPatternRef }) => JOURNEY_PATTERN_REFS.includes(journeyPatternRef));
+
+const createResponse = responseData => ({
+  statusCode: 200,
+  headers: {
+    'Access-Control-Allow-Origin': '*' // Required for CORS support to work
+  },
+  body: JSON.stringify(responseData)
+});
+
+const fetchData = callback => {
+  const url = `http://data.itsfactory.fi/journeys/api/1/vehicle-activity?lineRef=${LINES.join()}`;
   fetch(url)
     .then(res => res.json())
     .then(getEssentialInfo)
-    .then(json => callback(null, createResponse(json)))
-}
+    .then(createResponse)
+    .then(response => callback(null, response));
+};
 
 module.exports.hello = (event, context, callback) => {
   fetchData(callback);

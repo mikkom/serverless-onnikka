@@ -8,6 +8,7 @@
     "eslint": "^3.19.0"
   },
   "dependencies": {
+    "moment": "^2.18.1",
     "node-fetch": "^1.7.0"
   }
 }
