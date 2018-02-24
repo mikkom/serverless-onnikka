@@ -34,7 +34,13 @@ const getEssentialInfo = ({ body }) =>
     .map(({ monitoredVehicleJourney }) =>
       convertVehicleJourney(monitoredVehicleJourney)
     )
-    .filter(({ journeyPatternRef }) => JOURNEY_PATTERN_REFS.includes(journeyPatternRef));
+    .filter(({ journeyPatternRef }) =>
+      JOURNEY_PATTERN_REFS.includes(journeyPatternRef)
+    )
+    .reduce((obj, busData) => {
+      obj[busData.vehicleRef] = busData;
+      return obj;
+    }, {});
 
 const createResponse = responseData => ({
   statusCode: 200,
