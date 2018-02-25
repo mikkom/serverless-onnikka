@@ -37,8 +37,11 @@ const getEssentialInfo = ({ body }) =>
     .filter(({ journeyPatternRef }) =>
       JOURNEY_PATTERN_REFS.includes(journeyPatternRef)
     )
-    .reduce((obj, busData) => {
-      obj[busData.vehicleRef] = busData;
+    .reduce((obj, busData, idx) => {
+      const { vehicleRef } = busData;
+      // Check if the key has already been used
+      const key = obj[vehicleRef] ? `${vehicleRef}-at-index-${idx}` : vehicleRef;
+      obj[key] = busData;
       return obj;
     }, {});
 
