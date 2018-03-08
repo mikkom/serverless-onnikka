@@ -3,8 +3,8 @@
 const fetch = require('node-fetch');
 const moment = require('moment');
 
-const LINES = ['3', '4', '5', '6', '24', '40', '42', '43'];
-const JOURNEY_PATTERN_REFS = ['3A', '3B', '4', '5', '6', '24', '40A', '40B'];
+const LINES = ['3', '4', '5', '6', '20', '24', '40', '42', '43'];
+const JOURNEY_PATTERN_REFS = ['3A', '3B', '4', '5', '6', '20', '24', '40A', '40B'];
 
 const durationToSeconds = duration => moment.duration(duration).asSeconds();
 
