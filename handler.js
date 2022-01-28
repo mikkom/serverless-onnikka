@@ -3,8 +3,22 @@
 const fetch = require('node-fetch');
 const moment = require('moment');
 
-const LINES = ['3', '4', '5', '6', '20', '24', '40', '42', '43'];
-const JOURNEY_PATTERN_REFS = ['3A', '3B', '4', '5', '6', '20', '24', '40A', '40B'];
+const LINES = [
+  '1',
+  '3',
+  '5',
+  '6',
+  '10',
+  '13',
+  '14',
+  '40',
+  '40A',
+  '40B',
+  '40C',
+  '41',
+];
+
+const JOURNEY_PATTERN_REFS = LINES;
 
 const durationToSeconds = duration => moment.duration(duration).asSeconds();
 
@@ -15,18 +29,18 @@ const convertVehicleJourney = ({
   vehicleLocation: { latitude, longitude },
   bearing,
   delay,
-  speed
+  speed,
 }) => ({
   lineRef,
   journeyPatternRef,
   vehicleRef,
   location: {
     latitude: parseFloat(latitude),
-    longitude: parseFloat(longitude)
+    longitude: parseFloat(longitude),
   },
   bearing: parseFloat(bearing),
   delay: durationToSeconds(delay),
-  speed
+  speed,
 });
 
 const getEssentialInfo = ({ body }) =>
@@ -40,7 +54,9 @@ const getEssentialInfo = ({ body }) =>
     .reduce((obj, busData, idx) => {
       const { vehicleRef } = busData;
       // Check if the key has already been used
-      const key = obj[vehicleRef] ? `${vehicleRef}-at-index-${idx}` : vehicleRef;
+      const key = obj[vehicleRef]
+        ? `${vehicleRef}-at-index-${idx}`
+        : vehicleRef;
       obj[key] = busData;
       return obj;
     }, {});
@@ -48,9 +64,9 @@ const getEssentialInfo = ({ body }) =>
 const createResponse = responseData => ({
   statusCode: 200,
   headers: {
-    'Access-Control-Allow-Origin': '*' // Required for CORS support to work
+    'Access-Control-Allow-Origin': '*', // Required for CORS support to work
   },
-  body: JSON.stringify(responseData)
+  body: JSON.stringify(responseData),
 });
 
 const fetchData = callback => {
@@ -64,9 +80,4 @@ const fetchData = callback => {
 
 module.exports.hello = (event, context, callback) => {
   fetchData(callback);
-
-  // callback(null, response);
-
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
 };
