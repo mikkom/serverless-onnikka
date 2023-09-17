@@ -1,14 +1,17 @@
 {
   "name": "serverless-onnikka",
   "version": "1.0.0",
-  "main": "index.js",
-  "author": "Mikko Matilainen <mikko.matilainen@gofore.com>",
+  "main": "index.mjs",
+  "author": "Mikko Matilainen <mikkom@iki.fi>",
   "license": "MIT",
+  "engines": {
+    "node": "18"
+  },
   "devDependencies": {
-    "eslint": "^3.19.0"
+    "eslint": "^8.48.0",
+    "prettier": "^3.0.3"
   },
   "dependencies": {
-    "moment": "^2.18.1",
-    "node-fetch": "^1.7.0"
+    "iso8601-duration": "^2.1.1"
   }
 }
